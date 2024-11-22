@@ -64,7 +64,6 @@
             <button type="submit" name="action" value="drop">Drop Tables</button>
             <button type="submit" name="action" value="create">Create Tables</button>
             <button type="submit" name="action" value="populate">Populate Tables</button>
-            <button type="submit" name="action" value="populate">Populate Tables</button>
         </form>
     </div>
 
