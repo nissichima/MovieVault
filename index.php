@@ -61,9 +61,24 @@
     <div class="container">
         <h1>Movie Vault</h1>
         <form method="POST">
+			<h2>Tables</h2>
             <button type="submit" name="action" value="drop">Drop Tables</button>
             <button type="submit" name="action" value="create">Create Tables</button>
-            <button type="submit" name="action" value="populate">Populate Tables</button>
+            <button type="submit" name="action" value="populate">Populate Tables</button>				
+            <div>
+				<h2>Records</h2>
+				<input type="text" name="search_table" placeholder="table">
+				<br>
+				<input type="text" name="search_attribute" placeholder="search attribute">
+				<input type="text" name="search_value" placeholder="search value">
+				<br>
+				<input type="text" name="update_attribute" placeholder="update attribute">
+				<input type="text" name="update_value" placeholder="update value">
+            </div>
+            	<button type="submit" name="action" value="search">Search</button>
+				<button type="submit" name="action" value="update">Update</button>
+				<button type="submit" name="action" value="delete">Delete</button>
+
         </form>
     </div>
 
@@ -73,8 +88,8 @@
 
         // Database connection
         $conn = oci_connect(
-            'w64li',
-            '05136747',
+            'n75nguye',
+            '07312181',
             '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=oracle.scs.ryerson.ca)(Port=1521))(CONNECT_DATA=(SID=orcl)))'
         );
 
@@ -93,7 +108,13 @@
             include('populate_tables.php');
             echo "<p>Tables populated successfully.</p>";
             displayTables($conn);
-        }
+        } elseif ($action === 'search') {
+			include('search.php');
+		} elseif ($action === 'update') {
+			include('update.php');
+		} elseif ($action === 'delete') {
+			include('delete.php');
+		}
 
         
     }
@@ -102,8 +123,8 @@
     $tableNames = ['MOVIE', 'MOVIEINFO', 'CUSTOMER', 'CUSTOMER_USERNAME', 'CUSTOMER_EMAIL', 'FAVOURITES', 'ORDERS', 'RENTALS', 'PURCHASES', 'RATINGS'];
 	
 	$conn = oci_connect(
-            'w64li',
-            '05136747',
+            'n75nguye',
+            '07312181',
             '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=oracle.scs.ryerson.ca)(Port=1521))(CONNECT_DATA=(SID=orcl)))'
         );
 
