@@ -64,7 +64,8 @@
 			<h2>Tables</h2>
             <button type="submit" name="action" value="drop">Drop Tables</button>
             <button type="submit" name="action" value="create">Create Tables</button>
-            <button type="submit" name="action" value="populate">Populate Tables</button>				
+            <button type="submit" name="action" value="populate">Populate Tables</button>
+	     <button type="submit" name="action" value="queries">Query Tables</button>
             <div>
 				<h2>Records</h2>
 				<input type="text" name="search_table" placeholder="table">
@@ -108,7 +109,10 @@
             include('populate_tables.php');
             echo "<p>Tables populated successfully.</p>";
             displayTables($conn);
-        } elseif ($action === 'search') {
+        }elseif ($action === 'queries') {
+            include('queries.php');
+            echo "<p>Tables queried successfully.</p>";
+	}elseif ($action === 'search') {
 			include('search.php');
 		} elseif ($action === 'update') {
 			include('update.php');
