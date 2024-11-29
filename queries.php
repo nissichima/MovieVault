@@ -2,18 +2,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
-// Database connection
-$conn = oci_connect(
-    'w64li',
-    '05136747',
-    '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=oracle.scs.ryerson.ca)(Port=1521))(CONNECT_DATA=(SID=orcl)))'
-);
-
-if (!$conn) {
-    $m = oci_error();
-    echo $m['message'];
-    exit;
-}
+// Connect database
+include('connectdb.php');
 
 // Queries
 $query1 = "

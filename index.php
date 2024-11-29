@@ -65,7 +65,13 @@
             <button type="submit" name="action" value="drop">Drop Tables</button>
             <button type="submit" name="action" value="create">Create Tables</button>
             <button type="submit" name="action" value="populate">Populate Tables</button>
-	     <button type="submit" name="action" value="queries">Query Tables</button>
+			<button type="submit" name="action" value="queries">Query Tables</button>
+			<div>
+				<!--- <input type="text" name="custom_query" placeholder="Enter Custom Query"> --->
+				<textarea name="custom_query" placeholder="Enter Custom Query" rows="5" cols="45"></textarea>
+				<br>
+				<button type="submit" name="action" value="run_query">Run Query</button>
+			</div>
             <div>
 				<h2>Records</h2>
 				<input type="text" name="search_table" placeholder="table">
@@ -87,17 +93,8 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = $_POST['action'];
 
-        // Database connection
-        $conn = oci_connect(
-            'n75nguye',
-            '07312181',
-            '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=oracle.scs.ryerson.ca)(Port=1521))(CONNECT_DATA=(SID=orcl)))'
-        );
-
-        if (!$conn) {
-            echo "<p>Database connection failed.</p>";
-            exit;
-        }
+        // Connect database
+		include('connectdb.php');
 
         if ($action === 'drop') {
             include('drop_tables.php');
@@ -109,15 +106,17 @@
             include('populate_tables.php');
             echo "<p>Tables populated successfully.</p>";
             displayTables($conn);
-        }elseif ($action === 'queries') {
+        } elseif ($action === 'queries') {
             include('queries.php');
             echo "<p>Tables queried successfully.</p>";
-	}elseif ($action === 'search') {
+		} elseif ($action === 'search') {
 			include('search.php');
 		} elseif ($action === 'update') {
 			include('update.php');
 		} elseif ($action === 'delete') {
 			include('delete.php');
+		} elseif ($action === 'run_query') {
+			include('run_query.php');
 		}
 
         
@@ -126,17 +125,9 @@
     function displayTables($conn) {
     $tableNames = ['MOVIE', 'MOVIEINFO', 'CUSTOMER', 'CUSTOMER_USERNAME', 'CUSTOMER_EMAIL', 'FAVOURITES', 'ORDERS', 'RENTALS', 'PURCHASES', 'RATINGS'];
 	
-	$conn = oci_connect(
-            'n75nguye',
-            '07312181',
-            '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=oracle.scs.ryerson.ca)(Port=1521))(CONNECT_DATA=(SID=orcl)))'
-        );
-
-        if (!$conn) {
-            echo "<p>Database connection failed.</p>";
-            exit;
-        }
-        
+	// Connect database
+	include('connectdb.php');
+	
     foreach ($tableNames as $tableName) {
         echo "<h2>Table: $tableName</h2>";
         $query = "SELECT * FROM $tableName";

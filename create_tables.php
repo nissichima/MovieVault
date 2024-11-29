@@ -2,18 +2,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
-// Database connection
-$conn = oci_connect(
-    'w64li',
-    '05136747',
-    '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=oracle.scs.ryerson.ca)(Port=1521))(CONNECT_DATA=(SID=orcl)))'
-);
-
-if (!$conn) {
-    $m = oci_error();
-    echo $m['message'];
-    exit;
-}
+// Connect database
+include('connectdb.php');
 
 // SQL to create tables 
 $sql1 = "
@@ -35,7 +25,7 @@ CREATE TABLE MOVIEINFO (
     LengthOfMovie NUMBER,                         
     AverageRating NUMBER CHECK (AverageRating >= 0 AND AverageRating <= 5),  
     AgeRating VARCHAR2(10),      
-    FOREIGN KEY (MOVIEID) REFERENCES MOVIE(MOVIEID)                   
+    FOREIGN KEY (MOVIEID) REFERENCES MOVIE(MOVIEID) ON DELETE CASCADE                   
 )";
 $sql3 = "
 CREATE TABLE CUSTOMER (
@@ -45,17 +35,17 @@ CREATE TABLE CUSTOMER (
 )";
 $sql4 = "
 CREATE TABLE CUSTOMER_USERNAME (
-    CustomerID VARCHAR2(10) REFERENCES CUSTOMER(CustomerID),
+    CustomerID VARCHAR2(10) REFERENCES CUSTOMER(CustomerID) ON DELETE CASCADE,
     Username VARCHAR2(50) UNIQUE NOT NULL
 )";
 $sql5 = "
 CREATE TABLE CUSTOMER_EMAIL (
-    CustomerID VARCHAR2(10) REFERENCES CUSTOMER(CustomerID),
+    CustomerID VARCHAR2(10) REFERENCES CUSTOMER(CustomerID) ON DELETE CASCADE,
     Email VARCHAR2(100) UNIQUE NOT NULL
 )";
 $sql6 = "
 CREATE TABLE FAVOURITES (
-    CUSTOMERID VARCHAR2(10) REFERENCES CUSTOMER(CustomerID),                
+    CUSTOMERID VARCHAR2(10) REFERENCES CUSTOMER(CustomerID) ON DELETE CASCADE,                
     MOVIEID NUMBER REFERENCES MOVIE(MovieID),                         
     AddedDate DATE NOT NULL                
 )";
@@ -63,24 +53,24 @@ $sql7 = "
 CREATE TABLE ORDERS (
     OrderID NUMBER PRIMARY KEY,
     OrderTime DATE NOT NULL,
-    CustomerID VARCHAR2(10) REFERENCES CUSTOMER(CustomerID),
+    CustomerID VARCHAR2(10) REFERENCES CUSTOMER(CustomerID) ON DELETE CASCADE,
     MovieID NUMBER REFERENCES MOVIE(MovieID)
 )";
 $sql8 = "
 CREATE TABLE RENTALS (
-    OrderID NUMBER PRIMARY KEY REFERENCES ORDERS(OrderID),
+    OrderID NUMBER PRIMARY KEY REFERENCES ORDERS(OrderID) ON DELETE CASCADE,
     RentalPeriod VARCHAR2(15) NOT NULL,
     RentalPrice NUMBER DEFAULT 5.99
 )";
 $sql9 = "
 CREATE TABLE PURCHASES (
-    OrderID NUMBER PRIMARY KEY REFERENCES ORDERS(OrderID),
+    OrderID NUMBER PRIMARY KEY REFERENCES ORDERS(OrderID) ON DELETE CASCADE,
     PurchasePrice NUMBER DEFAULT 10.99
 )";
 $sql10 = "
 CREATE TABLE RATINGS (
-    CustomerID VARCHAR2(10) REFERENCES CUSTOMER(CustomerID),
-    MovieID NUMBER REFERENCES MOVIE(MovieID),
+    CustomerID VARCHAR2(10) REFERENCES CUSTOMER(CustomerID) ON DELETE CASCADE,
+    MovieID NUMBER REFERENCES MOVIE(MovieID) ON DELETE CASCADE,
     Rating NUMBER CHECK (Rating >= 0 AND Rating <= 5),
     PRIMARY KEY (CustomerID, MovieID)
 )";
@@ -104,4 +94,3 @@ foreach ($queries as $sql) {
 
 oci_close($conn);
 ?>
-

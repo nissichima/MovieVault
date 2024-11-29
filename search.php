@@ -2,18 +2,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
-// Database connection
-$conn = oci_connect(
-    'n75nguye',  // username
-    '07312181',  // password
-    '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=oracle.scs.ryerson.ca)(Port=1521))(CONNECT_DATA=(SID=orcl)))'  // connection string
-);
-
-if (!$conn) {
-    $m = oci_error();
-    echo "Connection failed: " . $m['message'];
-    exit;
-}
+// Connect database
+include('connectdb.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve user inputs
